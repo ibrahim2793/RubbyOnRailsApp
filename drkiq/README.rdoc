@@ -1,0 +1,19 @@
+== README
+
+
+The Requirements to deploy your app:
+
+* ruby V2.3.1
+
+* git version V2.19.0
+ 
+* Docker
+
+* docker-compose version V1.22.0
+
+* minikube version V0.28.2 
+
+* kubectl 
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.
