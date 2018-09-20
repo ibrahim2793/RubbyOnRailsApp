@@ -22,7 +22,7 @@ WORKDIR $INSTALL_PATH
 
 # Ensure gems are cached and only get updated when they change. This will
 # drastically increase build times when your gems do not change.
-COPY Gemfile Gemfile
+COPY Gemfile Gemfile 
 RUN bundle install
 
 # Copy in the application code from your work station at the current directory
@@ -37,3 +37,4 @@ VOLUME ["$INSTALL_PATH/public"]
 
 # The default command that gets ran will be to start the Unicorn server.
 CMD bundle exec unicorn -c config/unicorn.rb
+

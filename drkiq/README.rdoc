@@ -15,5 +15,71 @@ The Requirements to deploy your app:
 
 * kubectl 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* pull the repo from : https://github.com/ibrahim2793/RubbyOnRailsApp.git
+
+Instructions to run the app via docker-compose:
+
+- create the database volumes: 
+
+docker volume create --name drkiq-postgres
+docker volume create --name drkiq-redis
+
+- Run the database:
+
+docker­-compose run --­­user "$(id ­-u):$(id -­g)" drkiq rake db:reset
+docker­-compose run --­­user "$(id ­-u):$(id -­g)" drkiq rake db:migrate
+
+- Run the APP:
+
+docker-compose up --build
+
+Instructions to deploy the app via minikube:
+
+- start minikube:
+   start minikube
+
+- we will add our docker image to the minikube:
+   
+   eval $(minikube docker-env) 
+   docker build -t rails:v3 .
+
+- start to create the volumes:
+
+   kubectl create -f drkiq-postgres.yaml 
+   kubectl create -f drkiq-redis.yaml
+   kubectl create -f drkiq-volume.yaml 
+
+- Create secret to pass the env variables and db user,password:
+
+   create secret from postg.secret.txt file: 
+       
+       kubectl create secret generic postgres-secret --from-file=postg-secret.txt 
+
+   Create secret from env-var.text file:
+      
+       kubectl create secret generic envsecret --from-file=env-var.txt 
+
+- Create deployment of database and app:
+ 
+   kubectl create -f postgres-deployment.yaml 
+   kubectl create -f redis-deployment.yaml 
+   kubectl create -f sidekiq-deployment.yaml 
+   kubectl create -f drkiq-deployment.yaml 
+
+- Create service for the deployments:
+   
+   kubectl create -f postgres-service.yaml 
+   kubectl create -f redis-service.yaml 
+   kubectl create -f sidekiq-deployment.yaml 
+
+- Expose the drkiq deployment by creating service by open terminal 
+   
+   kubectl get deployments
+   kubectl expose deployment $name-of-deployment --type=NodePort 
+
+- We can access it by:
+  
+   kubectl get service 
+   curl $(minikube service name-of-service --url)
+
+
